@@ -21,3 +21,4 @@ The process repeats up to five times or until no errors remain, creating a self-
 - Custom validation logic
 
 ## Project Structure
+├── generator/ # BPMN-to-text generation ├── extractor/ # Text-to-elements extraction ├── corrector/ # Mistake-driven text correction ├── utils/ # BPMN parser, validator, helpers ├── models/ # Sample BPMN files (e.g., airport check-in) ├── results/ # Output logs and intermediate results ├── main.py # Main orchestration script └── README.md

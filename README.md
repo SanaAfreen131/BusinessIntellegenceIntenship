@@ -1,8 +1,4 @@
-Here’s a professional and concise **README.md** content tailored for your GitHub repository, summarizing the entire project series based on the six exercise sheets. It highlights your technical stack, objectives, structure, and key achievements—ideal for showcasing your work in generative AI, BPMN, and RAG systems.
 
----
-
-```markdown
 # Generative AI for BPMN Process Description – Wirtschaftsinformatik Praktikum
 
 This repository contains my implementation of a **multi-stage Retrieval-Augmented Generation (RAG) system** that uses **Large Language Models (LLMs)** to describe, evaluate, extract from, and iteratively correct natural language descriptions of **BPMN (Business Process Model and Notation)** diagrams. Developed as part of the *Wirtschaftsinformatik Praktikum* course at Goethe University Frankfurt (Winter 2025/26).

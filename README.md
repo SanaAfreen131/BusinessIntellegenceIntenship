@@ -81,8 +81,3 @@ Automate the generation of accurate, human-readable process descriptions from BP
 ---
 
 *Developed by Sana Afreen | Master's in Data Science & Business Informatics, Goethe University Frankfurt*
-```
-
----
-
-You can copy this directly into your `README.md`. It clearly communicates the academic context, technical depth, and innovation—perfect for internships or thesis documentation. Let me know if you'd like a shorter version or want to highlight specific parts (e.g., XAI, evaluation metrics, or pipeline architecture).

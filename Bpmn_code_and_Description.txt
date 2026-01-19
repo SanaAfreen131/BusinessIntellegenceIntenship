@@ -1,0 +1,566 @@
+Passenger Arrival
+
+1. Start Event: The process begins when the passenger arrives at the terminal.
+
+2. Gateway (Exclusive): The first gateway checks if the passenger is arriving from the Schengen area.
+
+If Yes: The passenger proceeds to passport control.
+
+Task: The passenger shows their passport.
+
+End Event: The process continues to baggage claim.
+
+If No: The passenger goes directly to baggage claim.
+
+3. Task: The passenger goes to baggage claim (if arriving from outside the Schengen area).
+
+4. Gateway (Exclusive): The next gateway checks whether the passenger has baggage.
+
+If Yes: The passenger takes their baggage.
+
+If No: The passenger skips baggage and proceeds to the next step.
+
+5. Gateway (Exclusive): The next gateway checks if the passenger has goods to declare.
+
+If Yes: The passenger goes to customs and declares goods at customs.
+
+If No: The passenger bypasses customs.
+
+6. End Event: The passenger leaves the airport, ending the process.
+
+The following is XML file for the Passenger Arrival BPMN Model
+
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1d2hcmz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_0gjrx3e" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0uhb44j</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_1mqzrms" name="Passenger arrives at terminal">
+      <bpmn:incoming>Flow_0uhb44j</bpmn:incoming>
+      <bpmn:outgoing>Flow_16d13i8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0uhb44j" sourceRef="StartEvent_1" targetRef="Activity_1mqzrms" />
+    <bpmn:exclusiveGateway id="Gateway_0evfyb5" name="Arrival from Schengen area">
+      <bpmn:incoming>Flow_16d13i8</bpmn:incoming>
+      <bpmn:outgoing>Flow_007o8vg</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1cxa3hs</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_16d13i8" sourceRef="Activity_1mqzrms" targetRef="Gateway_0evfyb5" />
+    <bpmn:task id="Activity_025pe4c" name="Passenger goes to passport control">
+      <bpmn:incoming>Flow_007o8vg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0db53jz</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_007o8vg" name="Yes" sourceRef="Gateway_0evfyb5" targetRef="Activity_025pe4c" />
+    <bpmn:task id="Activity_1os4btc" name="Passenger shows passport">
+      <bpmn:incoming>Flow_0db53jz</bpmn:incoming>
+      <bpmn:outgoing>Flow_170zzv5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0db53jz" sourceRef="Activity_025pe4c" targetRef="Activity_1os4btc" />
+    <bpmn:exclusiveGateway id="Gateway_051f2wu">
+      <bpmn:incoming>Flow_170zzv5</bpmn:incoming>
+      <bpmn:incoming>Flow_1cxa3hs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kot07x</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_170zzv5" sourceRef="Activity_1os4btc" targetRef="Gateway_051f2wu" />
+    <bpmn:task id="Activity_08ly2sm" name="Passenger goes to Baggage claim">
+      <bpmn:incoming>Flow_0kot07x</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vpldx8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0kot07x" sourceRef="Gateway_051f2wu" targetRef="Activity_08ly2sm" />
+    <bpmn:exclusiveGateway id="Gateway_028unw1" name="Passenger has Baggage?">
+      <bpmn:incoming>Flow_1vpldx8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0hf83pu</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0pfpkxj</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1vpldx8" sourceRef="Activity_08ly2sm" targetRef="Gateway_028unw1" />
+    <bpmn:task id="Activity_1ra6afl" name="Passenger takes baggage">
+      <bpmn:incoming>Flow_0hf83pu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1apmj59</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0hf83pu" name="Yes" sourceRef="Gateway_028unw1" targetRef="Activity_1ra6afl" />
+    <bpmn:exclusiveGateway id="Gateway_0z3qub4">
+      <bpmn:incoming>Flow_1apmj59</bpmn:incoming>
+      <bpmn:incoming>Flow_0pfpkxj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gdl1o6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1apmj59" sourceRef="Activity_1ra6afl" targetRef="Gateway_0z3qub4" />
+    <bpmn:exclusiveGateway id="Gateway_1jm2qfx" name="Goods to declare?">
+      <bpmn:incoming>Flow_0gdl1o6</bpmn:incoming>
+      <bpmn:outgoing>Flow_117t7r4</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1g58yxc</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0gdl1o6" sourceRef="Gateway_0z3qub4" targetRef="Gateway_1jm2qfx" />
+    <bpmn:task id="Activity_1whqgsx" name="Passenger goes to customs">
+      <bpmn:incoming>Flow_117t7r4</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k37ma9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_117t7r4" name="Yes" sourceRef="Gateway_1jm2qfx" targetRef="Activity_1whqgsx" />
+    <bpmn:task id="Activity_1uqy9wy" name="Passenger declares goods at customs">
+      <bpmn:incoming>Flow_1k37ma9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1y9q7bu</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1k37ma9" sourceRef="Activity_1whqgsx" targetRef="Activity_1uqy9wy" />
+    <bpmn:exclusiveGateway id="Gateway_0hfjz2j">
+      <bpmn:incoming>Flow_1y9q7bu</bpmn:incoming>
+      <bpmn:incoming>Flow_1g58yxc</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nbhe6j</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1y9q7bu" sourceRef="Activity_1uqy9wy" targetRef="Gateway_0hfjz2j" />
+    <bpmn:task id="Activity_1ofe5a5" name="Passenger leaves airport">
+      <bpmn:incoming>Flow_1nbhe6j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ekzerm</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1nbhe6j" sourceRef="Gateway_0hfjz2j" targetRef="Activity_1ofe5a5" />
+    <bpmn:endEvent id="Event_1klpzyp">
+      <bpmn:incoming>Flow_1ekzerm</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ekzerm" sourceRef="Activity_1ofe5a5" targetRef="Event_1klpzyp" />
+    <bpmn:sequenceFlow id="Flow_1g58yxc" name="No" sourceRef="Gateway_1jm2qfx" targetRef="Gateway_0hfjz2j" />
+    <bpmn:sequenceFlow id="Flow_0pfpkxj" name="No" sourceRef="Gateway_028unw1" targetRef="Gateway_0z3qub4" />
+    <bpmn:sequenceFlow id="Flow_1cxa3hs" name="No" sourceRef="Gateway_0evfyb5" targetRef="Gateway_051f2wu" />
+  </bpmn:process>
+</bpmn:definitions>
+
+
+Passenger Security
+
+1.Start Event: The process begins when the passenger shows their boarding pass.
+
+2. Task: The passenger then goes to the security check, where security personnel will check the passenger.
+
+3. Gateway (Exclusive): After the passenger is checked, an exclusive gateway checks whether the passenger is suspicious.
+
+If No (the passenger is not suspicious), the process moves to the next step.
+
+If Yes (the passenger is suspicious), the process flows to manual control.
+
+4. Task (Manual Control): If the passenger is suspicious, they will go through manual control, where additional checks are performed. Once manual control is complete, the process returns to the exclusive gateway to check the passenger's destination (Schengen or non-Schengen).
+
+5. Gateway (Exclusive): The exclusive gateway now checks whether the passenger s target destination is in the Schengen area.
+
+If Yes (the destination is in the Schengen area), the passenger proceeds to passport control.
+
+If No (the destination is outside the Schengen area), the passenger bypasses passport control and proceeds directly to the gate.
+
+6. Task: The passenger goes to passport control (if their destination is in the Schengen area) and shows their passport to the immigration officers.
+
+7. End Event: Finally, the process ends when the passenger goes to the gate.
+
+The following is XML file for the Passenger Security BPMN Model
+
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1d2hcmz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_0gjrx3e" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0qzs4cb</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_0hyfrbw" name="Passenger shows boarding pass">
+      <bpmn:incoming>Flow_0qzs4cb</bpmn:incoming>
+      <bpmn:outgoing>Flow_113a22b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0qzs4cb" sourceRef="StartEvent_1" targetRef="Activity_0hyfrbw" />
+    <bpmn:task id="Activity_1b5118s" name="Passenger goes to security check">
+      <bpmn:incoming>Flow_113a22b</bpmn:incoming>
+      <bpmn:outgoing>Flow_1bfsjlr</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_113a22b" sourceRef="Activity_0hyfrbw" targetRef="Activity_1b5118s" />
+    <bpmn:task id="Activity_1jjmbnc" name="Passenger is checked">
+      <bpmn:incoming>Flow_1bfsjlr</bpmn:incoming>
+      <bpmn:outgoing>Flow_14gpnhf</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1bfsjlr" sourceRef="Activity_1b5118s" targetRef="Activity_1jjmbnc" />
+    <bpmn:exclusiveGateway id="Gateway_186etih" name="Suspicious?">
+      <bpmn:incoming>Flow_14gpnhf</bpmn:incoming>
+      <bpmn:outgoing>Flow_07922yh</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0pgjgk8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_14gpnhf" sourceRef="Activity_1jjmbnc" targetRef="Gateway_186etih" />
+    <bpmn:task id="Activity_0xbghjc" name="manual control">
+      <bpmn:incoming>Flow_07922yh</bpmn:incoming>
+      <bpmn:outgoing>Flow_18x0wvn</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_07922yh" sourceRef="Gateway_186etih" targetRef="Activity_0xbghjc" />
+    <bpmn:exclusiveGateway id="Gateway_0m8wavk">
+      <bpmn:incoming>Flow_18x0wvn</bpmn:incoming>
+      <bpmn:incoming>Flow_0pgjgk8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0v4bdjq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_18x0wvn" sourceRef="Activity_0xbghjc" targetRef="Gateway_0m8wavk" />
+    <bpmn:exclusiveGateway id="Gateway_02gsgrv" name="Target destination in Schengen-Area?">
+      <bpmn:incoming>Flow_0v4bdjq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pqjvow</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0j29z80</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0v4bdjq" sourceRef="Gateway_0m8wavk" targetRef="Gateway_02gsgrv" />
+    <bpmn:task id="Activity_0fc21u0" name="Passenger goes to passport control">
+      <bpmn:incoming>Flow_0pqjvow</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m5s5su</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0pqjvow" sourceRef="Gateway_02gsgrv" targetRef="Activity_0fc21u0" />
+    <bpmn:task id="Activity_15wpbva" name="Passenger shows passport">
+      <bpmn:incoming>Flow_1m5s5su</bpmn:incoming>
+      <bpmn:outgoing>Flow_12geoqh</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1m5s5su" sourceRef="Activity_0fc21u0" targetRef="Activity_15wpbva" />
+    <bpmn:exclusiveGateway id="Gateway_0y95njd">
+      <bpmn:incoming>Flow_12geoqh</bpmn:incoming>
+      <bpmn:incoming>Flow_0j29z80</bpmn:incoming>
+      <bpmn:outgoing>Flow_07crduz</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_12geoqh" sourceRef="Activity_15wpbva" targetRef="Gateway_0y95njd" />
+    <bpmn:task id="Activity_156yma9" name="Passenger goes to gate">
+      <bpmn:incoming>Flow_07crduz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1otssyg</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_07crduz" sourceRef="Gateway_0y95njd" targetRef="Activity_156yma9" />
+    <bpmn:endEvent id="Event_09f8icp">
+      <bpmn:incoming>Flow_1otssyg</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1otssyg" sourceRef="Activity_156yma9" targetRef="Event_09f8icp" />
+    <bpmn:sequenceFlow id="Flow_0pgjgk8" sourceRef="Gateway_186etih" targetRef="Gateway_0m8wavk" />
+    <bpmn:sequenceFlow id="Flow_0j29z80" sourceRef="Gateway_02gsgrv" targetRef="Gateway_0y95njd" />
+  </bpmn:process>
+</bpmn:definitions>
+
+
+Managing Excess Carry-On Baggage Due to High Occupancy
+
+1. Start Event: The process begins when the passenger checks in for the flight.
+
+2.Task: The flight operations team assesses flight occupancy.
+
+3. Gateway (Exclusive): The process checks if the occupancy is high.
+
+If Yes: The flow moves to Task 4.
+
+If No: The flow moves to Task 5.
+
+4. Task: If the occupancy is high, the team enhances baggage control.
+
+5.  Task: After enhancing baggage control (if occupancy is high), the team notifies passengers of strict carry-on enforcement.
+
+6. Task: If occupancy is not high, the team applies standard carry-on procedures.
+
+7. Task: The gate staff receive notification about the flight situation.
+
+8. Task: The passenger arrives at the gate.
+
+9. Gateway (Exclusive): The process checks whether the passenger is ready for boarding.
+
+If Yes: The flow moves to Task 10.
+
+If No: The flow moves to Task 11.
+
+10. Task: If the passenger is ready, the passenger is allowed to board the flight.
+
+11. Gateway (Exclusive): If the passenger is not ready for boarding, the process checks the gate-level carry-on verification.
+
+If Yes: The flow moves to Task 10 (allowing the passenger to board).
+
+If No: The flow moves to Task 12.
+
+12.Task: If the passenger s carry-on item needs handling, the item is tagged and loaded into the aircraft hold.
+
+13. End Event: The process ends when the passenger boards the flight and the flight departs on time.
+
+
+The following is XML file for the Managing Excess Carry-On Baggage Due to High Occupancy BPMN Model
+
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ksue5u" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0">
+  <bpmn:collaboration id="Collaboration_03eq2w0">
+    <bpmn:participant id="Participant_0dcwdw7" name="Managing Excess Carry-On Baggage Due to High Occupancy" processRef="Process_0vf1lkj" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0vf1lkj" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0ufawd3">
+      <bpmn:lane id="Lane_0oquvgc" name="Passenger">
+        <bpmn:flowNodeRef>Activity_018lpg3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_116gj7j</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1jz1d27</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_15flvrp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_101tybz</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0v3s086</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1qtpqy8</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1o1qylt" name="Flight Operators">
+        <bpmn:flowNodeRef>Activity_18dgl92</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1dxnhao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0lcm8l5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1tdgug1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_13j2w9i</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0yee2mh" name="Gate Staff">
+        <bpmn:flowNodeRef>Gateway_0wuufl0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0e6y0xj</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0bsqg1f</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_18nabop</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_1tdvfih" sourceRef="StartEvent_1" targetRef="Activity_018lpg3" />
+    <bpmn:sequenceFlow id="Flow_1p2nh9g" sourceRef="Activity_018lpg3" targetRef="Activity_18dgl92" />
+    <bpmn:sequenceFlow id="Flow_0bz5ogy" sourceRef="Activity_18dgl92" targetRef="Gateway_1dxnhao" />
+    <bpmn:sequenceFlow id="Flow_1n72ap9" name="Yes" sourceRef="Gateway_1dxnhao" targetRef="Activity_13j2w9i" />
+    <bpmn:sequenceFlow id="Flow_0ql1mtk" name="No" sourceRef="Gateway_1dxnhao" targetRef="Activity_0lcm8l5" />
+    <bpmn:sequenceFlow id="Flow_0tba3w1" sourceRef="Activity_13j2w9i" targetRef="Activity_1tdgug1" />
+    <bpmn:sequenceFlow id="Flow_02eelej" name="No" sourceRef="Gateway_0wuufl0" targetRef="Activity_0bsqg1f" />
+    <bpmn:sequenceFlow id="Flow_17m2pmq" sourceRef="Activity_0bsqg1f" targetRef="Activity_18nabop" />
+    <bpmn:sequenceFlow id="Flow_17gv3a8" sourceRef="Activity_18nabop" targetRef="Gateway_101tybz" />
+    <bpmn:task id="Activity_18dgl92" name="Assess Flight Occupancy">
+      <bpmn:incoming>Flow_1p2nh9g</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bz5ogy</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_1dxnhao" name="Is Occupancy High?">
+      <bpmn:incoming>Flow_0bz5ogy</bpmn:incoming>
+      <bpmn:outgoing>Flow_1n72ap9</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ql1mtk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Activity_0lcm8l5" name="apply standard carry-on procedures">
+      <bpmn:incoming>Flow_0ql1mtk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1jlnfb5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_199d0n7" sourceRef="Activity_1tdgug1" targetRef="Activity_116gj7j" />
+    <bpmn:task id="Activity_1tdgug1" name="Notify passengers of strict carry-on enforcement">
+      <bpmn:incoming>Flow_0tba3w1</bpmn:incoming>
+      <bpmn:outgoing>Flow_199d0n7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_13j2w9i" name="Enhance baggage control">
+      <bpmn:incoming>Flow_1n72ap9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tba3w1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_018lpg3" name="Fight check-in begins">
+      <bpmn:incoming>Flow_1tdvfih</bpmn:incoming>
+      <bpmn:outgoing>Flow_1p2nh9g</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1tdvfih</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_116gj7j" name="Receive notification">
+      <bpmn:incoming>Flow_199d0n7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vi98kq</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0vi98kq" sourceRef="Activity_116gj7j" targetRef="Activity_1jz1d27" />
+    <bpmn:task id="Activity_1jz1d27" name="Arrive at the gate">
+      <bpmn:incoming>Flow_0vi98kq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0x0jj9b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1jlnfb5" sourceRef="Activity_0lcm8l5" targetRef="Gateway_0wuufl0" />
+    <bpmn:sequenceFlow id="Flow_0x0jj9b" sourceRef="Activity_1jz1d27" targetRef="Gateway_0wuufl0" />
+    <bpmn:exclusiveGateway id="Gateway_0wuufl0" name="Gate-Level Carry-On Verification">
+      <bpmn:incoming>Flow_1jlnfb5</bpmn:incoming>
+      <bpmn:incoming>Flow_0x0jj9b</bpmn:incoming>
+      <bpmn:outgoing>Flow_02eelej</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0i39xmg</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0i39xmg" name="Yes" sourceRef="Gateway_0wuufl0" targetRef="Activity_0e6y0xj" />
+    <bpmn:task id="Activity_0e6y0xj" name="Allow passenger for boarding">
+      <bpmn:incoming>Flow_0i39xmg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h6ne2r</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0bsqg1f" name="Proceed to overflow handling">
+      <bpmn:incoming>Flow_02eelej</bpmn:incoming>
+      <bpmn:outgoing>Flow_17m2pmq</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_18nabop" name="Tag item and load it into the aircraft hold">
+      <bpmn:incoming>Flow_17m2pmq</bpmn:incoming>
+      <bpmn:outgoing>Flow_17gv3a8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0h6ne2r" sourceRef="Activity_0e6y0xj" targetRef="Activity_15flvrp" />
+    <bpmn:sequenceFlow id="Flow_13om6n0" sourceRef="Activity_15flvrp" targetRef="Gateway_101tybz" />
+    <bpmn:sequenceFlow id="Flow_1gvhsd3" sourceRef="Gateway_101tybz" targetRef="Activity_0v3s086" />
+    <bpmn:sequenceFlow id="Flow_12ktxw1" sourceRef="Activity_0v3s086" targetRef="Event_1qtpqy8" />
+    <bpmn:task id="Activity_15flvrp" name="passenger ready for boarding">
+      <bpmn:incoming>Flow_0h6ne2r</bpmn:incoming>
+      <bpmn:outgoing>Flow_13om6n0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_101tybz">
+      <bpmn:incoming>Flow_17gv3a8</bpmn:incoming>
+      <bpmn:incoming>Flow_13om6n0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gvhsd3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Activity_0v3s086" name="Passenger Boards Flight Departs On Time">
+      <bpmn:incoming>Flow_1gvhsd3</bpmn:incoming>
+      <bpmn:outgoing>Flow_12ktxw1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1qtpqy8">
+      <bpmn:incoming>Flow_12ktxw1</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+</bpmn:definitions>
+
+
+Delayed Baggage
+
+1.Start Event (Empty Circle): The process begins when a Passenger Arrives at Destination Without Baggage, triggering the baggage claim procedure.
+
+2.Task (Rounded Rectangle): Report Delayed Baggage represents a manual activity performed by the passenger to initiate the claim.
+
+3. Task (Rounded Rectangle): Receive report is an activity handled by the Baggage Service Office upon receiving the passengers claim.
+
+4.Task (Rounded Rectangle): Initiate Baggage Tracing is an action taken by the Baggage Service Office to start tracking the missing luggage.
+
+5. Task (Rounded Rectangle): traces baggage across airlines is an automated or system-driven activity performed by the Baggage Logistics System to locate the baggage.
+
+6. Exclusive Gateway (Diamond with X): Is Baggage Located Within 24 Hours? is a decision point that routes the flow based on whether the baggage is found within a day Yes leads to delivery, No continues tracing.
+
+7. Task (Rounded Rectangle): Continue tracing is a recurring activity performed by the logistics system if the baggage isn't located within 24 hours.
+
+8. Task (Rounded Rectangle): activate interim support is an activity initiated by the Baggage Service Office to provide temporary assistance to the passenger.
+
+9. Task (Rounded Rectangle): Receive interim support is an activity experienced by the passenger after interim aid is activated.
+
+10. Task (Rounded Rectangle): Proceed to delivery is an activity triggered when the baggage is located, moving the process toward returning it to the passenger.
+
+11. Exclusive Gateway (Diamond with X): This gateway merges paths from Receive interim support and Proceed to delivery, ensuring only one path proceeds to the next step.
+
+12. Task (Rounded Rectangle): Deliver Baggage to Passenger is the physical act of returning the found baggage to the traveler.
+
+13. Exclusive Gateway (Diamond with X): Is Baggage Found Within 21 Days? is a final decision point determining whether the case can be closed (Yes) or must be declared lost (No).
+
+14. Task (Rounded Rectangle): close case is the administrative activity concluding the process if the baggage is recovered within 21 days.
+
+15. Task (Rounded Rectangle): Presumed Lost is the outcome activity if the baggage remains unfound after 21 days, initiating compensation procedures.
+
+16. Exclusive Gateway (Diamond with X): This gateway merges the close case and Presumed Lost paths before proceeding to passenger confirmation.
+
+17. Task (Rounded Rectangle): Passenger confirms Delivery is the final user interaction verifying receipt of the baggage or acknowledgment of its loss.
+
+18. End Event (Circle with thick border): The process concludes after the passenger confirms delivery or resolution, signifying completion of the baggage handling workflow.
+
+The following is XML file for the Delayed Baggage BPMN Model
+
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ksue5u" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0">
+  <bpmn:collaboration id="Collaboration_18ms20w">
+    <bpmn:participant id="Participant_118qw89" name="Passenger Boards Flight Departs On Time" processRef="Process_0vf1lkj" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0vf1lkj" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0lvsprt">
+      <bpmn:lane id="Lane_1mluzhh" name="Passenger">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1sw1w8q</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0a78tty</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1yp4yfl</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1cud6u8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0l0oxyb</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1jbqvy7" name="Baggage Service office">
+        <bpmn:flowNodeRef>Activity_0v0y1xr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0s71171</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_01olyne</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_08zniyq</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0u5qnte</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0nuc8ho</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_146dlvn</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0udw8b8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1v894ht</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0698fq2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1knmo8a" name="Baggage Logistics System">
+        <bpmn:flowNodeRef>Activity_0i8kewr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_125ivt2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0cdd29y</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_1fek3b2" sourceRef="StartEvent_1" targetRef="Activity_1sw1w8q" />
+    <bpmn:sequenceFlow id="Flow_1cyivma" sourceRef="Activity_1sw1w8q" targetRef="Activity_0a78tty" />
+    <bpmn:sequenceFlow id="Flow_1vxwxl0" sourceRef="Gateway_0u5qnte" targetRef="Activity_0nuc8ho" />
+    <bpmn:sequenceFlow id="Flow_1vs9v61" name="Yes" sourceRef="Gateway_146dlvn" targetRef="Activity_0udw8b8" />
+    <bpmn:sequenceFlow id="Flow_0tur4bk" name="No" sourceRef="Gateway_146dlvn" targetRef="Activity_0698fq2" />
+    <bpmn:sequenceFlow id="Flow_05zrn92" sourceRef="Activity_0udw8b8" targetRef="Gateway_1v894ht" />
+    <bpmn:sequenceFlow id="Flow_0um5dw2" sourceRef="Activity_0698fq2" targetRef="Gateway_1v894ht" />
+    <bpmn:sequenceFlow id="Flow_0t59w45" sourceRef="Gateway_1v894ht" targetRef="Activity_1cud6u8" />
+    <bpmn:sequenceFlow id="Flow_01v2xdt" sourceRef="Activity_1cud6u8" targetRef="Event_0l0oxyb" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1fek3b2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_1sw1w8q" name="Passenger Arrives at Destination Without Baggage">
+      <bpmn:incoming>Flow_1fek3b2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1cyivma</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0a78tty" name="Report Delayed Baggage">
+      <bpmn:incoming>Flow_1cyivma</bpmn:incoming>
+      <bpmn:outgoing>Flow_15q3k6e</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_15q3k6e" sourceRef="Activity_0a78tty" targetRef="Activity_0v0y1xr" />
+    <bpmn:task id="Activity_0v0y1xr" name="Receive report">
+      <bpmn:incoming>Flow_15q3k6e</bpmn:incoming>
+      <bpmn:outgoing>Flow_1w2nyey</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0s71171" name="Initiate Baggage Tracing">
+      <bpmn:incoming>Flow_1w2nyey</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k2yg3x</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1w2nyey" sourceRef="Activity_0v0y1xr" targetRef="Activity_0s71171" />
+    <bpmn:sequenceFlow id="Flow_1k2yg3x" sourceRef="Activity_0s71171" targetRef="Activity_0i8kewr" />
+    <bpmn:sequenceFlow id="Flow_020nscv" sourceRef="Activity_0i8kewr" targetRef="Gateway_125ivt2" />
+    <bpmn:sequenceFlow id="Flow_1n5kaow" name="Yes" sourceRef="Gateway_125ivt2" targetRef="Activity_08zniyq" />
+    <bpmn:task id="Activity_01olyne" name="activate interim support">
+      <bpmn:incoming>Flow_12mk2n5</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nazn3d</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0nazn3d" sourceRef="Activity_01olyne" targetRef="Activity_1yp4yfl" />
+    <bpmn:sequenceFlow id="Flow_0ql1pm8" name="No" sourceRef="Gateway_125ivt2" targetRef="Activity_0cdd29y" />
+    <bpmn:sequenceFlow id="Flow_12mk2n5" sourceRef="Activity_0cdd29y" targetRef="Activity_01olyne" />
+    <bpmn:task id="Activity_1yp4yfl" name="Receive interim support">
+      <bpmn:incoming>Flow_0nazn3d</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qthhuk</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_08zniyq" name="Proceed to delivery">
+      <bpmn:incoming>Flow_1n5kaow</bpmn:incoming>
+      <bpmn:outgoing>Flow_05vxg2u</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_0u5qnte">
+      <bpmn:incoming>Flow_1qthhuk</bpmn:incoming>
+      <bpmn:incoming>Flow_05vxg2u</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vxwxl0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1qthhuk" sourceRef="Activity_1yp4yfl" targetRef="Gateway_0u5qnte" />
+    <bpmn:sequenceFlow id="Flow_05vxg2u" sourceRef="Activity_08zniyq" targetRef="Gateway_0u5qnte" />
+    <bpmn:task id="Activity_0nuc8ho" name="Deliver Baggage to Passenger">
+      <bpmn:incoming>Flow_1vxwxl0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gk1snh</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0gk1snh" sourceRef="Activity_0nuc8ho" targetRef="Gateway_146dlvn" />
+    <bpmn:exclusiveGateway id="Gateway_146dlvn" name="Is Baggage Found Within 21 Days?">
+      <bpmn:incoming>Flow_0gk1snh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vs9v61</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0tur4bk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Activity_0udw8b8" name="close case">
+      <bpmn:incoming>Flow_1vs9v61</bpmn:incoming>
+      <bpmn:outgoing>Flow_05zrn92</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_1v894ht">
+      <bpmn:incoming>Flow_05zrn92</bpmn:incoming>
+      <bpmn:incoming>Flow_0um5dw2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0t59w45</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Activity_0i8kewr" name="traces baggage across airlines">
+      <bpmn:incoming>Flow_1k2yg3x</bpmn:incoming>
+      <bpmn:outgoing>Flow_020nscv</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_125ivt2" name="Is Baggage Located Within 24 Hours?">
+      <bpmn:incoming>Flow_020nscv</bpmn:incoming>
+      <bpmn:outgoing>Flow_1n5kaow</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ql1pm8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Activity_0cdd29y" name="Continue tracing">
+      <bpmn:incoming>Flow_0ql1pm8</bpmn:incoming>
+      <bpmn:outgoing>Flow_12mk2n5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0698fq2" name="Presumed Lost">
+      <bpmn:incoming>Flow_0tur4bk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0um5dw2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1cud6u8" name="Passenger confirms Delivery">
+      <bpmn:incoming>Flow_0t59w45</bpmn:incoming>
+      <bpmn:outgoing>Flow_01v2xdt</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_0l0oxyb">
+      <bpmn:incoming>Flow_01v2xdt</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+</bpmn:definitions>
+
